@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -20,7 +21,7 @@ public class Settings {
     @Pattern(regexp = "[A-Z]")
     String mapping;
 
-
+    @Size(min = 3, max = 3)
     List<Integer> initialValues;
 
 }
