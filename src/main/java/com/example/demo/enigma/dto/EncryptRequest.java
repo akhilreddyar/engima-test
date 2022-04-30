@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Input implements Serializable {
+public class EncryptRequest implements Serializable {
 
-    String body;
+    String message;
 }
