@@ -1,16 +1,14 @@
 package com.example.demo.enigma;
 
-import com.example.demo.enigma.dto.Input;
+import com.example.demo.enigma.dto.DecryptRequest;
+import com.example.demo.enigma.dto.EncryptRequest;
 import com.example.demo.enigma.dto.Output;
 import com.example.demo.enigma.dto.Settings;
 import com.example.demo.services.EnigmaServices;
 import lombok.var;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @RequestMapping("/")
@@ -21,6 +19,7 @@ public class DefaultImplementation implements EnigmaServices {
     private static int[] r1, r2, r3;
     private static int pos1 = 0, pos2 = 0;
     private static int[] prevStates;
+
     public DefaultImplementation() {
         r1 = new int[MAX_VALUE];
         r2 = new int[MAX_VALUE];
@@ -32,13 +31,13 @@ public class DefaultImplementation implements EnigmaServices {
     }
 
     @Override
-    public Output engimaEncrypt(Input val) {
+    public Output enigmaEncrypt(EncryptRequest val) {
         StringBuilder out = new StringBuilder();
         prevStates[0] = r1[0];
         prevStates[1] = r2[0];
         prevStates[2] = r3[0];
-        for (int i = 0; i < val.getBody().length(); i++) {
-            out.append(getEnigma(val.getBody().charAt(i), r1, r2, r3));
+        for (int i = 0; i < val.getMessage().length(); i++) {
+            out.append(getEnigma(val.getMessage().charAt(i), r1, r2, r3));
             rotate(r1);
             pos1++;
             if (pos1 > MAX_VALUE) {
@@ -74,6 +73,15 @@ public class DefaultImplementation implements EnigmaServices {
             if (r3[i] == 0) r3[i] = 26;
         }
         return print(r1) + print(r2) + print(r3);
+    }
+
+    @Override
+    public String enigmaDecrypt(DecryptRequest decryptRequest) {
+        var settings = new Settings();
+        settings.setInitialValues(decryptRequest.getInitialValues());
+        settings.setMapping(decryptRequest.getMapping());
+        setConfig(settings);
+        return enigmaEncrypt(new EncryptRequest(decryptRequest.getMessage())).getBody();
     }
 
     static char getEnigma(char input, final int[] r1, final int[] r2, final int[] r3) {

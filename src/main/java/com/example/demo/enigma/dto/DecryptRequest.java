@@ -1,18 +1,14 @@
 package com.example.demo.enigma.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Input implements Serializable {
-
-    String body;
+@NoArgsConstructor
+@AllArgsConstructor
+public class DecryptRequest extends Settings {
+    private String message;
 }
